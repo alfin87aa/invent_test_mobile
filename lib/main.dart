@@ -4,6 +4,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await DenpendencyInjection.init();
   runApp(const App());
+  configLoading();
 }
 
 class App extends StatelessWidget {
@@ -26,6 +27,7 @@ class App extends StatelessWidget {
         locale: TranslationService.locale,
         fallbackLocale: TranslationService.fallbackLocale,
         translations: TranslationService(),
+        builder: EasyLoading.init(),
       ),
     );
   }
@@ -48,4 +50,20 @@ class DismissKeyboard extends StatelessWidget {
       child: child,
     );
   }
+}
+
+void configLoading() {
+  EasyLoading.instance
+    ..indicatorType = EasyLoadingIndicatorType.threeBounce
+    ..loadingStyle = EasyLoadingStyle.custom
+    ..indicatorSize = 45.0
+    ..radius = 10.0
+    ..progressColor = AppConfigs.appPrimaryColor
+    ..backgroundColor = (AppConfigs.appLayoutBackground)
+    ..indicatorColor = AppConfigs.appPrimaryColor
+    ..textColor = AppConfigs.appPrimaryColor
+    // ..maskColor = Colors.red
+    ..userInteractions = false
+    ..dismissOnTap = false
+    ..animationStyle = EasyLoadingAnimationStyle.scale;
 }

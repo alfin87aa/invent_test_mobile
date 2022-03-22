@@ -4,26 +4,54 @@
 
 import 'dart:convert';
 
-List<ProductModel> productModelFromJson(String str) => List<ProductModel>.from(
-    json.decode(str).map((x) => ProductModel.fromJson(x)));
+ProductModel productModelFromJson(String str) =>
+    ProductModel.fromJson(json.decode(str));
 
-String productModelToJson(List<ProductModel> data) =>
-    json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String productModelToJson(ProductModel data) => json.encode(data.toJson());
 
 class ProductModel {
   ProductModel({
-    required this.productId,
-    required this.productName,
-    required this.productType,
-    required this.productGroup,
-    required this.productWeight,
-    required this.uom,
-    required this.dnrCode,
-    required this.sapCode,
-    required this.price,
-    required this.isPpnInclude,
-    required this.productWeightUom,
+    required this.statusCode,
+    required this.statusMessageInd,
+    required this.statusMessageEng,
+    required this.valueProduct,
   });
+
+  String statusCode;
+  String statusMessageInd;
+  String statusMessageEng;
+  List<ValueProduct> valueProduct;
+
+  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+        statusCode: json["status_code"],
+        statusMessageInd: json["status_message_ind"],
+        statusMessageEng: json["status_message_eng"],
+        valueProduct: List<ValueProduct>.from(
+            json["value"].map((x) => ValueProduct.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "status_code": statusCode,
+        "status_message_ind": statusMessageInd,
+        "status_message_eng": statusMessageEng,
+        "value": List<dynamic>.from(valueProduct.map((x) => x.toJson())),
+      };
+}
+
+class ValueProduct {
+  ValueProduct(
+      {required this.productId,
+      required this.productName,
+      required this.productType,
+      required this.productGroup,
+      required this.productWeight,
+      required this.uom,
+      required this.dnrCode,
+      required this.sapCode,
+      required this.price,
+      required this.isPpnInclude,
+      required this.productWeightUom,
+      this.branchId});
 
   String productId;
   String productName;
@@ -36,8 +64,9 @@ class ProductModel {
   String price;
   String isPpnInclude;
   String productWeightUom;
+  String? branchId;
 
-  factory ProductModel.fromJson(Map<String, dynamic> json) => ProductModel(
+  factory ValueProduct.fromJson(Map<String, dynamic> json) => ValueProduct(
         productId: json["product_id"],
         productName: json["product_name"],
         productType: json["product_type"],
@@ -49,9 +78,10 @@ class ProductModel {
         price: json["price"],
         isPpnInclude: json["is_ppn_include"],
         productWeightUom: json["product_weight_uom"],
+        branchId: json["branch_id"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, Object> toJson() => {
         "product_id": productId,
         "product_name": productName,
         "product_type": productType,

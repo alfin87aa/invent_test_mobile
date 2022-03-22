@@ -4,7 +4,7 @@ class ProductListBinding extends Bindings {
   @override
   void dependencies() {
     DbHelper _localData = Get.find();
-    Get.lazyPut<ProductListController>(
-        (() => ProductListController(dbHelper: _localData)));
+    Get.lazyPut<ProductListController>((() => ProductListController(
+        dbHelper: _localData, apiRepository: Get.find())));
   }
 }

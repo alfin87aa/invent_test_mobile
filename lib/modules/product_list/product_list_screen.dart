@@ -5,6 +5,17 @@ class ProductListScreen extends GetView<ProductListController> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Obx(() => Scaffold(
+          body: ListView.builder(
+            itemCount: controller.productList.length,
+            itemBuilder: (BuildContext context, int index) {
+              return Card(
+                child: ListTile(
+                  title: Text(controller.productList[index].productName),
+                ),
+              );
+            },
+          ),
+        ));
   }
 }

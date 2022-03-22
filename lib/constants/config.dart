@@ -4,7 +4,7 @@ class AppConfigs {
   static const String appName = 'Test MobileCom';
 
   ///API URL
-  static const baseUrl = "https://invent-integrasi.com/test_core/v1/";
+  static const baseUrl = "http://invent-integrasi.com/test_core/v1/";
 
   ///Paging
   static const pageSize = 10;
