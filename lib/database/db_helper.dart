@@ -68,10 +68,10 @@ class DbHelper {
     return result.toList();
   }
 
-  Future<List> getProductPrice(String tableName) async {
+  Future<List> getProductPrice() async {
     final db = await openDB();
     var result = db.rawQuery(
-        'SELECT product.product_id, product.product_name, product.product_type, product.product_group, product.product_weight, product.product_weight, product.uom, product.dnr_code, product.sap_code, product.is_ppn_include, product.product_weight_uom, price.price, price.branch_id FROM product INNER JOIN items ON product.product_id = price.product_id');
+        'SELECT product.product_id, product.product_name, product.product_type, product.product_group, product.product_weight, product.product_weight, product.uom, product.dnr_code, product.sap_code, product.is_ppn_include, product.product_weight_uom, IFNULL(price.price, product.price) price, price.branch_id FROM product LEFT JOIN price ON product.product_id = price.product_id');
     return result;
   }
 }

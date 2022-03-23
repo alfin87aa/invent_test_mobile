@@ -9,21 +9,41 @@ class ProductListController extends GetxController {
     required this.apiRepository,
   });
 
+  final List<ValueProduct> _product = <ValueProduct>[];
+  final searchController = TextEditingController();
   RxList<ValueProduct> productList = <ValueProduct>[].obs;
-  RxList<ValuePrice> priceList = <ValuePrice>[].obs;
+  RxInt currentIndex = 0.obs;
+  RxInt idSelectSortChoices = 0.obs;
+  final sortChoices = <SortChoice>[
+    SortChoice(1, 'by name asc'.tr),
+    SortChoice(2, 'by name desc'.tr),
+    SortChoice(3, 'by price asc'.tr),
+    SortChoice(4, 'by price desc'.tr),
+  ];
 
   @override
   void onInit() async {
     super.onInit();
-    await clearDB();
-    dbHelper.getData(ProductQuery.TABLE_NAME).then((value) {
-      if (value.isNotEmpty) {
-        for (var element in value) {
-          productList.add(ValueProduct.fromJson(element));
-        }
-      } else {
+    await dbHelper.getData(ProductQuery.TABLE_NAME).then((value) {
+      if (value.isEmpty) {
         getProducts();
         getPrices();
+      }
+    });
+    loadProducts();
+  }
+
+  void changeMenu(int index) {
+    currentIndex.value = index;
+  }
+
+  Future<void> loadProducts() async {
+    dbHelper.getProductPrice().then((items) {
+      if (items.isNotEmpty) {
+        for (var item in items) {
+          _product.add(ValueProduct.fromJson(item));
+        }
+        productList.addAll(_product);
       }
     });
   }
@@ -31,11 +51,8 @@ class ProductListController extends GetxController {
   Future<void> getProducts() async {
     var _products = await apiRepository.getProduct();
     if (_products != null) {
-      productList.value = _products.valueProduct;
-      productList.refresh();
-
-      for (var _product in _products.valueProduct) {
-        dbHelper.insert(ProductQuery.TABLE_NAME, _product.toJson());
+      for (var _item in _products.valueProduct) {
+        dbHelper.insert(ProductQuery.TABLE_NAME, _item.toJson());
       }
     }
   }
@@ -43,9 +60,6 @@ class ProductListController extends GetxController {
   Future<void> getPrices() async {
     var _prices = await apiRepository.getPrice();
     if (_prices != null) {
-      priceList.value = _prices.valuePrice;
-      priceList.refresh();
-
       for (var _price in _prices.valuePrice) {
         dbHelper.insert(PriceQuery.TABLE_NAME, _price.toJson());
       }
@@ -56,10 +70,58 @@ class ProductListController extends GetxController {
     dbHelper.delete(ProductQuery.TABLE_NAME);
     dbHelper.delete(PriceQuery.TABLE_NAME);
 
-    productList.value = [];
-    priceList.value = [];
+    _product.clear();
+    productList.clear();
+  }
 
-    productList.refresh();
-    priceList.refresh();
+  Future<void> refreshProduct() async {
+    await clearDB();
+    await getProducts();
+    await getPrices();
+    await loadProducts();
+  }
+
+  void searchProduct(String query) {
+    if (query.isNotEmpty) {
+      List<ValueProduct> _productListData = <ValueProduct>[];
+
+      for (var element in _product) {
+        if (element.productName.toLowerCase().contains(query) ||
+            element.price.toLowerCase().contains(query)) {
+          _productListData.add(element);
+        }
+      }
+      productList.clear();
+      productList.addAll(_productListData);
+    } else {
+      productList.clear();
+      productList.addAll(_product);
+    }
+  }
+
+  void sortProduct(int index) {
+    idSelectSortChoices.value = index;
+
+    switch (index) {
+      case 1:
+        productList.sort(((a, b) => a.productName
+            .toLowerCase()
+            .compareTo(b.productName.toLowerCase())));
+        break;
+      case 2:
+        productList.sort(((a, b) => b.productName
+            .toLowerCase()
+            .compareTo(a.productName.toLowerCase())));
+        break;
+      case 3:
+        productList
+            .sort(((a, b) => int.parse(a.price).compareTo(int.parse(b.price))));
+        break;
+      case 4:
+        productList
+            .sort(((a, b) => int.parse(b.price).compareTo(int.parse(a.price))));
+        break;
+      default:
+    }
   }
 }

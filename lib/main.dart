@@ -59,7 +59,9 @@ void configLoading() {
     ..indicatorSize = 45.0
     ..radius = 10.0
     ..progressColor = AppConfigs.appPrimaryColor
-    ..backgroundColor = (AppConfigs.appLayoutBackground)
+    ..backgroundColor = (Get.isDarkMode
+        ? AppConfigs.appBackgroundColorDark
+        : AppConfigs.appLayoutBackground)
     ..indicatorColor = AppConfigs.appPrimaryColor
     ..textColor = AppConfigs.appPrimaryColor
     // ..maskColor = Colors.red

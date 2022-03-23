@@ -25,6 +25,7 @@ class AppConfigs {
   static const fontFamily = 'Roboto';
 
   static const appPrimaryColor = ColorConstants.orange500;
+  static const appAccentPrimaryColor = ColorConstants.orange300;
   static const scaffoldLightColor = Color(0xFFEBF2F7);
   static const appLayoutBackground = Color(0xFFf8f8f8);
   static const viewLineColor = Color(0xFFEAEAEA);
