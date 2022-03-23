@@ -17,8 +17,8 @@ class ProductListController extends GetxController {
   final sortChoices = <SortChoice>[
     SortChoice(1, 'by name asc'.tr),
     SortChoice(2, 'by name desc'.tr),
-    SortChoice(3, 'by price asc'.tr),
-    SortChoice(4, 'by price desc'.tr),
+    SortChoice(3, 'by price low'.tr),
+    SortChoice(4, 'by price high'.tr),
   ];
 
   @override

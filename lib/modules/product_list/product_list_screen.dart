@@ -58,16 +58,31 @@ class ProductListScreen extends GetView<ProductListController> {
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Container(
-                                    width: 32,
-                                    height: 4,
-                                    margin: const EdgeInsets.only(bottom: 16.0),
-                                    color: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall!
-                                        .color!
-                                        .withOpacity(0.3),
+                                  Center(
+                                    child: Container(
+                                      width: 32.0,
+                                      height: 4.0,
+                                      margin:
+                                          const EdgeInsets.only(bottom: 16.0),
+                                      decoration: boxDecoration(
+                                          color: Theme.of(context)
+                                              .textTheme
+                                              .bodySmall!
+                                              .color!
+                                              .withOpacity(0.3),
+                                          radius: 8.0),
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      'sort'.tr,
+                                      style:
+                                          Theme.of(context).textTheme.headline6,
+                                    ),
                                   ),
                                   Obx(
                                     () => Wrap(
